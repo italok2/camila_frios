@@ -4,11 +4,7 @@ import { Link } from 'react-router-dom';
 import properties from './Properties';
 
 const DrawerMenu = ({ open, onClose, user }) => {
-
- console.log(open)
- console.log(onClose)
-
-  if ( user != null && properties.userAdmin == user.email) {
+  if (user != null && properties.userAdmin == user.email) {
     return (
       <Drawer anchor="left" open={open} onClose={onClose}>
         <List>

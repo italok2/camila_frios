@@ -1,0 +1,15 @@
+@media only screen and (max-width: 700px) {
+    #boxCadastroVendedor{
+        align-items: center;
+        margin-left: 15%;
+        margin-top: 5%;
+    }
+    
+    #buttonCadastrarVendedor{
+        margin-top: 11%;
+    }
+}
+
+@media only screen and (min-width: 701px) {
+
+}

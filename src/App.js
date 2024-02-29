@@ -4,9 +4,6 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import UserStatus from './components/UserStatus';
 import CadastrarVendedor from './components/CadastrarVendedor';
 
-// import CadastrarVendedores from './components/CadastrarVendedor';
-
-
 function App() {
 
   return (
@@ -16,6 +13,7 @@ function App() {
           <UserStatus />
           <Routes>
             <Route path="/cadastrovendedor" element={<CadastrarVendedor />} />
+    
           </Routes>
 
         </section>
