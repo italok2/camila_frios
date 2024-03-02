@@ -32,7 +32,7 @@ const Login = ({ user }) => {
             .then((userCredential) => {
                 // Signed in
                 const user = userCredential.user;
-                navigate("/home")
+                navigate("/pedidos")
             })
             .catch((error) => {
                 const errorCode = error.code;

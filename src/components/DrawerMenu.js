@@ -8,20 +8,17 @@ const DrawerMenu = ({ open, onClose, user }) => {
     return (
       <Drawer anchor="left" open={open} onClose={onClose}>
         <List>
-          <ListItem button component={Link} to="/Pedidos">
+          <ListItem button component={Link} to="/pedidos">
             <ListItemText primary="Pedidos" />
           </ListItem>
           <ListItem button component={Link} to="/CadastrarProduto">
             <ListItemText primary="Produtos" />
           </ListItem>
-          <ListItem button component={Link} to="/CadastrarProduto">
+          <ListItem button component={Link} to="/cadastrarProduto">
             <ListItemText primary="Cadastrar Produtos" />
           </ListItem>
           <ListItem button component={Link} to="/CadastrarProduto">
             <ListItemText primary="Atualizar Produtos" />
-          </ListItem>
-          <ListItem button component={Link} to="/Vendedores">
-            <ListItemText primary="Vendedores" />
           </ListItem>
           <ListItem button component={Link} to="/cadastrovendedor">
             <ListItemText primary="Cadastrar Vendedores" />
