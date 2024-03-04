@@ -44,7 +44,7 @@ export default function DataGridProduto() {
   return (
     <Box id="dataGridListProduto" sx={{ height: 400, width: '100%' }}>
       <DataGrid
-        isCellEditable={(params) => false}
+        isCellEditable={() => false}
         rows={produtos}
         columns={columns}
         initialState={{
@@ -59,4 +59,4 @@ export default function DataGridProduto() {
       />
     </Box>
   );
-};
+}

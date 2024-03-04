@@ -5,7 +5,7 @@ import Login from './Login';
 
 const UserStatus = () => {
 
-  const { user, loading, signIn, signOut } = UseFirebaseAuth();
+  const { user, loading, signOut } = UseFirebaseAuth();
 
   if (loading) {
     return <p>Verificando status de autenticação...</p>;

@@ -6,11 +6,8 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import DataGridProduto from './DataGridProduto'
 import { collection, addDoc } from 'firebase/firestore';
-import { useNavigate } from 'react-router-dom';
-import Produto from './class/Produto'
 
 const CadastrarProduto = () => {
-    const navigate = useNavigate();
 
     const [nomeProduto, setNomeProduto] = useState('')
     const [descProduto, setDescProduto] = useState('');

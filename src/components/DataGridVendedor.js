@@ -36,7 +36,7 @@ export default function DataGridVendedor() {
   return (
     <Box id="dataGridListVendedor" sx={{ height: 400, width: '100%' }}>
       <DataGrid
-        isCellEditable={(params) => false}
+        isCellEditable={() => false}
         rows={users}
         columns={columns}
         initialState={{
@@ -51,4 +51,4 @@ export default function DataGridVendedor() {
       />
     </Box>
   );
-};
+}

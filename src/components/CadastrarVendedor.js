@@ -41,15 +41,6 @@ const CadastrarVendedor = () => {
         }
 
     };
-
-    const handleEmailChange = (e) => {
-        const newEmail = e.target.value;
-        setEmail(newEmail);
-
-        // Valida o e-mail enquanto o usuário digita
-        validateEmail(newEmail);
-    };
-
     const handleBlur = () => {
         // Valida o e-mail quando o usuário sai do campo
         validateEmail(email);
@@ -65,7 +56,7 @@ const CadastrarVendedor = () => {
         }
 
         await createUserWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
+            .then(() => {
                 // Signed in
                 const usuariosCollection = collection(firestore, 'usuarios');
                 const userDoc = doc(usuariosCollection, email);
