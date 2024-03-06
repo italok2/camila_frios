@@ -10,14 +10,16 @@ const columns = [
   {
     field: 'nomeProduto',
     isCellEditable: false,
+    disableColumnSelector: false,
     headerName: 'Produto',
     width: 150,
     editable: true,
   },
   {
     field: 'descProduto',
+    disableColumnSelector: false,
     isCellEditable: false,
-    headerName: 'Produto',
+    headerName: 'Descrição',
     width: 150,
     editable: true,
   }
@@ -42,15 +44,18 @@ export default function DataGridProduto() {
   }, []); // O array vazio como segundo argumento garante que o useEffect só é executado uma vez (na montagem do componente)
 
   return (
+   
     <Box id="dataGridListProduto" sx={{ height: 400, width: '100%' }}>
+       <h4>Produtos:</h4>
       <DataGrid
         isCellEditable={() => false}
+        disableColumnSelector
         rows={produtos}
         columns={columns}
         initialState={{
           pagination: {
             paginationModel: {
-              pageSize: 8,
+              pageSize: 10,
             },
           },
         }}

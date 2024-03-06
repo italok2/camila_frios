@@ -55,6 +55,8 @@ const CadastrarVendedor = () => {
             return null
         }
 
+        const currentUserEmail = auth.currentUser.email
+
         await createUserWithEmailAndPassword(auth, email, password)
             .then(() => {
                 // Signed in
@@ -62,17 +64,17 @@ const CadastrarVendedor = () => {
                 const userDoc = doc(usuariosCollection, email);
                 setDoc(userDoc, {
                     password: password,
-                    email: email,
+                    email: email.toLowerCase(),
                 });
 
                 alert("Vendedor Cadastrado!")
-                signInWithEmailAndPassword(auth, properties.userAdmin, properties.password);
+                signInWithEmailAndPassword(auth, currentUserEmail, properties.password);
                 setEmail('')
                 setPassword('')
                 navigate("/cadastrovendedor")
             })
             .catch((error) => {
-                signInWithEmailAndPassword(auth, properties.userAdmin, properties.password);
+                signInWithEmailAndPassword(auth, currentUserEmail, properties.password);
                 const errorCode = error.code;
                 const errorMessage = error.message;
                 console.log(errorCode, errorMessage);

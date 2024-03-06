@@ -1,0 +1,26 @@
+@media only screen and (max-width: 700px) {
+    #boxCadastroCliente{
+        align-items: center;
+        margin-left: 15%;
+        margin-top: 5%;
+    }
+    
+    #buttonCadastrarCliente{
+        margin-top: 11%;
+    }
+    #dataGridListCliente{
+        margin-top: 4%;
+    }
+
+    
+}
+
+@media only screen and (min-width: 701px) {
+    
+    #dataGridListCliente{
+        margin-top: 3%;
+    }
+    #nLogradouro{
+        width: 4%;
+    }
+}

@@ -4,21 +4,15 @@ import { Link } from 'react-router-dom';
 import properties from './Properties';
 
 const DrawerMenu = ({ open, onClose, user }) => {
-  if (user != null && properties.userAdmin == user.email) {
+  if (user != null && properties.userAdmin.includes(user.email)) {
     return (
       <Drawer anchor="left" open={open} onClose={onClose}>
         <List>
           <ListItem button component={Link} to="/pedidos">
             <ListItemText primary="Pedidos" />
           </ListItem>
-          <ListItem button component={Link} to="/CadastrarProduto">
-            <ListItemText primary="Produtos" />
-          </ListItem>
-          <ListItem button component={Link} to="/cadastrarProduto">
+          <ListItem button component={Link} to="/cadastrarproduto">
             <ListItemText primary="Cadastrar Produtos" />
-          </ListItem>
-          <ListItem button component={Link} to="/CadastrarProduto">
-            <ListItemText primary="Atualizar Produtos" />
           </ListItem>
           <ListItem button component={Link} to="/cadastrovendedor">
             <ListItemText primary="Cadastrar Vendedores" />
@@ -30,8 +24,11 @@ const DrawerMenu = ({ open, onClose, user }) => {
     return (
       <Drawer anchor="left" open={open} onClose={onClose}>
         <List>
-          <ListItem button component={Link} to="/cadastrarVendedores">
-            <ListItemText primary="Menu vendedor" />
+          <ListItem button component={Link} to="/listarprodutos">
+            <ListItemText primary="Produtos" />
+          </ListItem>
+          <ListItem button component={Link} to="/cadastrarclientes">
+            <ListItemText primary="Clientes" />
           </ListItem>
         </List>
       </Drawer>

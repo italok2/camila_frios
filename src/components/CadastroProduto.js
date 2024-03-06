@@ -11,6 +11,7 @@ const CadastrarProduto = () => {
 
     const [nomeProduto, setNomeProduto] = useState('')
     const [descProduto, setDescProduto] = useState('');
+    const [preco, setPreco] = useState('');
 
 
 
@@ -22,7 +23,9 @@ const CadastrarProduto = () => {
       
             const produto = {
               nomeProduto: nomeProduto,
-              descProduto: descProduto
+              descProduto: descProduto,
+              preco: preco,
+              qtd:qtd
             };
       
             // Adiciona o documento à coleção 'produtos'
@@ -30,6 +33,8 @@ const CadastrarProduto = () => {
       
             setDescProduto('')
             setNomeProduto('')
+            setQtd('')
+            setPreco('')
             alert("produto cadastrado")
             console.log('Produto cadastrado com sucesso! ID do documento:', docRef.id);
             
@@ -50,7 +55,7 @@ const CadastrarProduto = () => {
                 noValidate
                 autoComplete="off"
             >
-                <h3>Produto</h3>
+                <h4>Cadastrar Produto</h4>
                 <TextField
                     label="Nome Produto"
                     variant="outlined"
@@ -64,6 +69,14 @@ const CadastrarProduto = () => {
                     onChange={(e) => setDescProduto(e.target.value)}
                 />
 
+<TextField
+          id="outlined-number"
+          label="Number"
+          type="number"
+          InputLabelProps={{
+            shrink: true,
+          }}
+        />
                 <Button id="buttonCadastrarProduto" type="submit" onClick={onSubmit} variant="contained">Cadastrar</Button>
             </Box>
             <DataGridProduto />
