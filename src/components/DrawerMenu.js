@@ -17,6 +17,9 @@ const DrawerMenu = ({ open, onClose, user }) => {
           <ListItem button component={Link} to="/cadastrovendedor">
             <ListItemText primary="Cadastrar Vendedores" />
           </ListItem>
+          <ListItem button component={Link} to="/cadastrarclientes">
+            <ListItemText primary="Clientes" />
+          </ListItem>
         </List>
       </Drawer>
     );

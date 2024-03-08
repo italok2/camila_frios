@@ -1,11 +1,11 @@
 import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
 import React, { useState, useEffect } from 'react';
-import { firestore, auth } from '../firebase';
-import { collection, getDocs } from 'firebase/firestore';
+import { firestore } from '../firebase';
+import { collection, getDocs,  query, where } from 'firebase/firestore';
 import './css/CadastroClientes.css';
 import properties from './Properties';
-
+import UseFirebaseAuth from './UseFirebaseAuth';
 
 const columns = [
   {
@@ -53,29 +53,38 @@ const columns = [
 
 export default function DataGridClientes() {
   const [clientes, setClientes] = useState([]);
-
+  const [email, setEmail] = useState(null);
+  const { user} = UseFirebaseAuth();
+  
   useEffect(() => {
     const fetchUsers = async () => {
-      try {
-        const clientesCollection = collection(firestore, 'clientes'); // Substitua 'usuarios' pelo nome da sua coleção
-        let querySnapshot = null
-        if (properties.userAdmin.includes(auth.currentUser.email)) {
-          console.log("23123213")
-          querySnapshot = await getDocs(clientesCollection);
-        } else {
-          console.log("italo")
-          querySnapshot = await getDocs(clientesCollection);
-        }
-
-        const clientesData = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-        setClientes(clientesData);
+        try {
+          const clientesCollection = collection(firestore, 'clientes');
+  
+          if (!email) {
+            setEmail(user.email);
+          }
+  
+          let querySnapshot = null;
+  
+          if (properties.userAdmin.includes(email)) {
+            console.log("é admin");
+            querySnapshot = await getDocs(clientesCollection);
+          } else {
+            console.log("não é admin");
+            const filtro = where('userAgent', '==', email);
+            querySnapshot = await getDocs(query(clientesCollection, filtro));
+          }
+  
+          const clientesData = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+          setClientes(clientesData);
       } catch (error) {
         console.error('Erro ao buscar clientes:', error);
       }
     };
 
     fetchUsers();
-  }, []); // O array vazio como segundo argumento garante que o useEffect só é executado uma vez (na montagem do componente)
+  },[email, user]); // O array vazio como segundo argumento garante que o useEffect só é executado uma vez (na montagem do componente)
 
   return (
 
