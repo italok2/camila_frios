@@ -2,10 +2,12 @@ import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
 import React, { useState, useEffect } from 'react';
 import { firestore } from '../firebase';
-import { collection, getDocs,  query, where } from 'firebase/firestore';
+import { collection, getDocs, query, where } from 'firebase/firestore';
 import './css/CadastroClientes.css';
 import properties from './Properties';
 import UseFirebaseAuth from './UseFirebaseAuth';
+
+
 
 const columns = [
   {
@@ -54,37 +56,55 @@ const columns = [
 export default function DataGridClientes() {
   const [clientes, setClientes] = useState([]);
   const [email, setEmail] = useState(null);
-  const { user} = UseFirebaseAuth();
-  
+  const { user } = UseFirebaseAuth();
+
   useEffect(() => {
     const fetchUsers = async () => {
-        try {
-          const clientesCollection = collection(firestore, 'clientes');
-  
-          if (!email) {
-            setEmail(user.email);
-          }
-  
-          let querySnapshot = null;
-  
-          if (properties.userAdmin.includes(email)) {
-            console.log("é admin");
-            querySnapshot = await getDocs(clientesCollection);
-          } else {
-            console.log("não é admin");
-            const filtro = where('userAgent', '==', email);
-            querySnapshot = await getDocs(query(clientesCollection, filtro));
-          }
-  
-          const clientesData = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-          setClientes(clientesData);
+      try {
+        const clientesCollection = collection(firestore, 'clientes');
+
+        if (!email) {
+          setEmail(user.email);
+        }
+
+        let querySnapshot = null;
+
+        if (properties.userAdmin.includes(email)) {
+          console.log("é admin");
+          querySnapshot = await getDocs(clientesCollection);
+        } else {
+          console.log("não é admin");
+          const filtro = where('userAgent', '==', email);
+          querySnapshot = await getDocs(query(clientesCollection, filtro));
+        }
+
+        const clientesData = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+        setClientes(clientesData);
       } catch (error) {
         console.error('Erro ao buscar clientes:', error);
       }
     };
 
     fetchUsers();
-  },[email, user]); // O array vazio como segundo argumento garante que o useEffect só é executado uma vez (na montagem do componente)
+  }, [email, user]); // O array vazio como segundo argumento garante que o useEffect só é executado uma vez (na montagem do componente)
+
+
+
+  const dynamicColumns = properties.userAdmin.includes(email)
+    ? [
+      ...columns,
+      {
+        field: 'userAgent',
+        headerName: 'Vendedor',
+        width: 150,
+        valueGetter: (params) => {
+          const userAgent = params.row.userAgent;
+          const firstPart = userAgent.split('@')[0];
+          return firstPart;
+        },
+      },
+    ]
+    : [...columns];
 
   return (
 
@@ -94,7 +114,7 @@ export default function DataGridClientes() {
         isCellEditable={() => false}
         disableColumnSelector
         rows={clientes}
-        columns={columns}
+        columns={dynamicColumns}
         initialState={{
           pagination: {
             paginationModel: {
