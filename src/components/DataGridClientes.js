@@ -108,7 +108,7 @@ export default function DataGridClientes() {
 
   return (
 
-    <Box id="dataGridListCliente" sx={{ height: 400, width: '100%' }}>
+    <Box id="dataGridListCliente" sx={{ height: '100% ', width: '100%' }}>
       <h4>Clientes:</h4>
       <DataGrid
         isCellEditable={() => false}
@@ -118,7 +118,7 @@ export default function DataGridClientes() {
         initialState={{
           pagination: {
             paginationModel: {
-              pageSize: 7,
+              pageSize: 8,
             },
           },
         }}
