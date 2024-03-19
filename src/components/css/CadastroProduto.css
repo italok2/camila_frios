@@ -12,10 +12,10 @@
     #dataGridListProduto {
         margin-top: 4%;
     }
-
-    body > div.base-Popper-root.MuiDataGrid-panel.css-n3z9fz-MuiPopper-root-MuiDataGrid-panel > div > div:nth-child(2) {
-        width: 80px !important;
-    }
+     
+    .MuiDataGrid-panelWrapper {
+        width: 50px !important;
+      }
 }
 
 @media only screen and (min-width: 701px) {
