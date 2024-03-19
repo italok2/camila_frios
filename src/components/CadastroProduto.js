@@ -13,8 +13,6 @@ const CadastrarProduto = () => {
     const [descProduto, setDescProduto] = useState('');
     const [preco, setPreco] = useState('');
 
-
-
     const onSubmit = async (e) => {
         e.preventDefault()
 
@@ -24,8 +22,7 @@ const CadastrarProduto = () => {
             const produto = {
                 nomeProduto: nomeProduto,
                 descProduto: descProduto,
-                preco: preco,
-                qtd: qtd
+                preco: preco
             };
 
             // Adiciona o documento à coleção 'produtos'
@@ -33,7 +30,6 @@ const CadastrarProduto = () => {
 
             setDescProduto('')
             setNomeProduto('')
-            setQtd('')
             setPreco('')
             alert("produto cadastrado")
             console.log('Produto cadastrado com sucesso! ID do documento:', docRef.id);

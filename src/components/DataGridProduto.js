@@ -1,10 +1,11 @@
 import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
+import IconButton from '@mui/material/IconButton';
+import ClearIcon from '@mui/icons-material/Clear';
 import React, { useState, useEffect } from 'react';
 import firestore from '../firebase';
-import { collection, onSnapshot } from 'firebase/firestore';
+import { collection, query, where, orderBy, onSnapshot } from 'firebase/firestore';
 import './css/CadastroProduto.css';
-
 
 const columns = [
   {
@@ -26,30 +27,66 @@ const columns = [
 ];
 
 export default function DataGridProduto() {
-  const [produtos, setprodutos] = useState([]);
+  const [produtos, setProdutos] = useState([]);
+  const [filtroNomeProduto, setFiltroNomeProduto] = useState('');
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchProdutos = () => {
       try {
-        const usersCollection = collection(firestore, 'produtos');
+        const produtosCollection = collection(firestore, 'produtos');
+        let q = produtosCollection;
 
-        let querySnapshot = onSnapshot(usersCollection, (snapshot) => {
-          const produtosData = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-          setprodutos(produtosData);
-        });
+        if (filtroNomeProduto) {
+          const regex = new RegExp(filtroNomeProduto, 'i');
+          q = query(produtosCollection, where('nomeProduto', '>=', filtroNomeProduto), orderBy('nomeProduto'));
 
+          const unsubscribe = onSnapshot(q, (snapshot) => {
+            const filteredProdutos = [];
+            snapshot.forEach((doc) => {
+              const data = doc.data();
+              if (regex.test(data.nomeProduto)) {
+                filteredProdutos.push({ id: doc.id, ...data });
+              }
+            });
+            setProdutos(filteredProdutos);
+          });
+
+          return () => unsubscribe();
+        } else {
+          const unsubscribe = onSnapshot(q, (snapshot) => {
+            const produtosData = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+            setProdutos(produtosData);
+          });
+
+          return () => unsubscribe();
+        }
       } catch (error) {
         console.error('Erro ao buscar produtos:', error);
       }
     };
 
-    fetchUsers();
-  }, []); // O array vazio como segundo argumento garante que o useEffect só é executado uma vez (na montagem do componente)
+    fetchProdutos();
+  }, [filtroNomeProduto]);
+
+  const handleFiltroNomeChange = (event) => {
+    setFiltroNomeProduto(event.target.value);
+  };
+
+  const handleLimparFiltro = () => {
+    setFiltroNomeProduto('');
+  };
 
   return (
-
     <Box id="dataGridListProduto" sx={{ height: '100%', width: '100%' }}>
       <h4>Produtos:</h4>
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <input id="filterNomeProduto" type="text" value={filtroNomeProduto} onChange={handleFiltroNomeChange} placeholder="Filtrar por nome do produto" />
+        {filtroNomeProduto && (
+          <IconButton onClick={handleLimparFiltro} size="small">
+            <ClearIcon />
+          </IconButton>
+        )}
+      </div>
       <DataGrid
         isCellEditable={() => false}
         disableColumnSelector
