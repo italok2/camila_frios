@@ -2,7 +2,7 @@ import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
 import React, { useState, useEffect } from 'react';
 import { firestore } from '../firebase';
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { collection, onSnapshot, query, where } from 'firebase/firestore';
 import './css/CadastroClientes.css';
 import properties from './Properties';
 import UseFirebaseAuth from './UseFirebaseAuth';
@@ -57,36 +57,45 @@ export default function DataGridClientes() {
   const [clientes, setClientes] = useState([]);
   const [email, setEmail] = useState(null);
   const { user } = UseFirebaseAuth();
-
+  
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const clientesCollection = collection(firestore, 'clientes');
+    
 
         if (!email) {
           setEmail(user.email);
         }
-
-        let querySnapshot = null;
-
-        if (properties.userAdmin.includes(email)) {
-          console.log("é admin");
-          querySnapshot = await getDocs(clientesCollection);
-        } else {
-          console.log("não é admin");
-          const filtro = where('userAgent', '==', email);
-          querySnapshot = await getDocs(query(clientesCollection, filtro));
-        }
-
-        const clientesData = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-        setClientes(clientesData);
+        const unsubscribe = getClientesRealTime();
       } catch (error) {
         console.error('Erro ao buscar clientes:', error);
       }
     };
 
     fetchUsers();
-  }, [email, user]); // O array vazio como segundo argumento garante que o useEffect só é executado uma vez (na montagem do componente)
+  }, [email, user]);
+
+  const getClientesRealTime = (emailparametro) => {
+    const clientesCollection = collection(firestore, 'clientes');
+
+    let querySnapshot = null;
+    if (properties.userAdmin.includes(user.email)) {
+      querySnapshot = onSnapshot(clientesCollection, (snapshot) => { // Substituir getDocs por onSnapshot
+        const clientesData = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+        setClientes(clientesData);
+      });
+    } else {
+      const filtro = where('userAgent', '==', user.email);
+      querySnapshot = onSnapshot(query(clientesCollection, filtro), (snapshot) => { // Substituir getDocs por onSnapshot
+        const clientesData = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+        setClientes(clientesData);
+      });
+    }
+
+    return () => querySnapshot();
+  };
+
+  
 
 
 
