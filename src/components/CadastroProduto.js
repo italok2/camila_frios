@@ -20,27 +20,27 @@ const CadastrarProduto = () => {
 
         try {
             const produtosCollection = collection(firestore, 'produtos');
-      
+
             const produto = {
-              nomeProduto: nomeProduto,
-              descProduto: descProduto,
-              preco: preco,
-              qtd:qtd
+                nomeProduto: nomeProduto,
+                descProduto: descProduto,
+                preco: preco,
+                qtd: qtd
             };
-      
+
             // Adiciona o documento à coleção 'produtos'
             const docRef = await addDoc(produtosCollection, produto);
-      
+
             setDescProduto('')
             setNomeProduto('')
             setQtd('')
             setPreco('')
             alert("produto cadastrado")
             console.log('Produto cadastrado com sucesso! ID do documento:', docRef.id);
-            
-          } catch (error) {
+
+        } catch (error) {
             console.error('Erro ao cadastrar o produto:', error.message);
-          }
+        }
 
     }
 
@@ -69,14 +69,14 @@ const CadastrarProduto = () => {
                     onChange={(e) => setDescProduto(e.target.value)}
                 />
 
-<TextField
-          id="outlined-number"
-          label="Number"
-          type="number"
-          InputLabelProps={{
-            shrink: true,
-          }}
-        />
+                <TextField
+                    id="outlined-number"
+                    label="Number"
+                    type="number"
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                />
                 <Button id="buttonCadastrarProduto" type="submit" onClick={onSubmit} variant="contained">Cadastrar</Button>
             </Box>
             <DataGridProduto />
