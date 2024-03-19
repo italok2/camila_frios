@@ -2,7 +2,7 @@ import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
 import React, { useState, useEffect } from 'react';
 import firestore from '../firebase';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, onSnapshot } from 'firebase/firestore';
 import './css/CadastroVendedor.css';
 
 const columns = [
@@ -10,6 +10,13 @@ const columns = [
     field: 'email',
     isCellEditable: false,
     headerName: 'Email',
+    width: 315,
+    editable: false,
+  },
+  {
+    field: 'password',
+    isCellEditable: false,
+    headerName: 'Senha',
     width: 315,
     editable: true,
   }
@@ -22,9 +29,12 @@ export default function DataGridVendedor() {
     const fetchUsers = async () => {
       try {
         const usersCollection = collection(firestore, 'usuarios'); // Substitua 'usuarios' pelo nome da sua coleção
-        const querySnapshot = await getDocs(usersCollection);
-        const userData = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-        setUsers(userData);
+        onSnapshot(usersCollection, (snapshot) => {
+          ;
+          const userData = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+
+          setUsers(userData);
+        });
       } catch (error) {
         console.error('Erro ao buscar usuários:', error);
       }
@@ -37,6 +47,7 @@ export default function DataGridVendedor() {
     <Box id="dataGridListVendedor" sx={{ height: 400, width: '100%' }}>
       <DataGrid
         isCellEditable={() => false}
+        disableColumnSelector
         rows={users}
         columns={columns}
         initialState={{

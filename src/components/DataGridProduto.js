@@ -2,7 +2,7 @@ import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
 import React, { useState, useEffect } from 'react';
 import firestore from '../firebase';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, onSnapshot } from 'firebase/firestore';
 import './css/CadastroProduto.css';
 
 
@@ -12,7 +12,7 @@ const columns = [
     isCellEditable: false,
     disableColumnSelector: false,
     headerName: 'Produto',
-    width: 150,
+    width: 180,
     editable: true,
   },
   {
@@ -31,10 +31,13 @@ export default function DataGridProduto() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const usersCollection = collection(firestore, 'produtos'); // Substitua 'usuarios' pelo nome da sua coleção
-        const querySnapshot = await getDocs(usersCollection);
-        const produtosData = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-        setprodutos(produtosData);
+        const usersCollection = collection(firestore, 'produtos');
+
+        let querySnapshot = onSnapshot(usersCollection, (snapshot) => {
+          const produtosData = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+          setprodutos(produtosData);
+        });
+
       } catch (error) {
         console.error('Erro ao buscar produtos:', error);
       }
@@ -44,9 +47,9 @@ export default function DataGridProduto() {
   }, []); // O array vazio como segundo argumento garante que o useEffect só é executado uma vez (na montagem do componente)
 
   return (
-   
-    <Box id="dataGridListProduto" sx={{ height: 400, width: '100%' }}>
-       <h4>Produtos:</h4>
+
+    <Box id="dataGridListProduto" sx={{ height: '100%', width: '100%' }}>
+      <h4>Produtos:</h4>
       <DataGrid
         isCellEditable={() => false}
         disableColumnSelector

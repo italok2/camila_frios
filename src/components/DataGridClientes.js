@@ -61,7 +61,6 @@ export default function DataGridClientes() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-    
 
         if (!email) {
           setEmail(user.email);
@@ -75,16 +74,18 @@ export default function DataGridClientes() {
     fetchUsers();
   }, [email, user]);
 
-  const getClientesRealTime = (emailparametro) => {
+  const getClientesRealTime = () => {
     const clientesCollection = collection(firestore, 'clientes');
 
     let querySnapshot = null;
     if (properties.userAdmin.includes(user.email)) {
+      console.log("é admin")
       querySnapshot = onSnapshot(clientesCollection, (snapshot) => { // Substituir getDocs por onSnapshot
         const clientesData = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
         setClientes(clientesData);
       });
     } else {
+      console.log("não é admin")
       const filtro = where('userAgent', '==', user.email);
       querySnapshot = onSnapshot(query(clientesCollection, filtro), (snapshot) => { // Substituir getDocs por onSnapshot
         const clientesData = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
