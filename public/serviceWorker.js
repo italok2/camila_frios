@@ -1,9 +1,9 @@
 // serviceWorker.js
 
-const CACHE_NAME = 'app-cache-v1';
+const CACHE_NAME = 'app-cache-v2';
 
 self.addEventListener('install', (event) => {
-  console.log('Service Worker installed');
+  console.log('Service Worker installed 1');
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => cache.addAll([
@@ -15,7 +15,7 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('activate', (event) => {
-  console.log('Service Worker activated');
+  console.log('Service Worker activated1');
   event.waitUntil(
     caches.keys()
       .then(cacheNames => Promise.all(
@@ -30,7 +30,7 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  console.log('Fetch intercepted for:3 ', event.request.url);
+  console.log('Fetch intercepted for:1 ', event.request.url);
   event.respondWith(
     caches.match(event.request)
       .then(cachedResponse => {
