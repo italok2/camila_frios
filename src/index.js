@@ -5,7 +5,7 @@ import { createRoot } from 'react-dom/client'; // Importe createRoot de 'react-d
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import {register} from './serviceWorker'; // Importe o arquivo de registro do Service Worker
+import {register} from './serviceWorkerRegistration'; // Importe o arquivo de registro do Service Worker
 
 const root = createRoot(document.getElementById('root')); // Use createRoot
 root.render(
