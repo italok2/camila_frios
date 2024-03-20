@@ -1,6 +1,6 @@
 // serviceWorker.js
 
-const CACHE_NAME = 'app-cache-v2';
+const CACHE_NAME = 'app-cache-v0.1.1';
 
 self.addEventListener('install', (event) => {
   console.log('Service Worker installed 1');
@@ -15,7 +15,7 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('activate', (event) => {
-  console.log('Service Worker activated1');
+  console.log('Service Worker activated 1');
   event.waitUntil(
     caches.keys()
       .then(cacheNames => Promise.all(
