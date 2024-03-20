@@ -1,6 +1,4 @@
-// serviceWorker.js
-
-const CACHE_NAME = 'app-cache-v0.1.1';
+const CACHE_NAME = 'app-cache-v0.1.2';
 
 self.addEventListener('install', (event) => {
   console.log('Service Worker installed 1');
@@ -11,6 +9,14 @@ self.addEventListener('install', (event) => {
         '/index.html',
         // Adicione aqui outros recursos estáticos do seu aplicativo
       ]))
+      .then(() => {
+        return caches.keys().then(keys => {
+          return Promise.all(keys
+            .filter(key => key !== CACHE_NAME)
+            .map(key => caches.delete(key))
+          );
+        });
+      })
   );
 });
 
