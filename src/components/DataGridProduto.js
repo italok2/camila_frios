@@ -3,6 +3,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import IconButton from '@mui/material/IconButton';
 import ClearIcon from '@mui/icons-material/Clear';
 import React, { useState, useEffect } from 'react';
+import TextField from '@mui/material/TextField';
 import firestore from '../firebase';
 import { collection, query, where, orderBy, onSnapshot } from 'firebase/firestore';
 import './css/CadastroProduto.css';
@@ -80,7 +81,13 @@ export default function DataGridProduto() {
     <Box id="dataGridListProduto" sx={{ height: '100%', width: '100%' }}>
       <h4>Produtos:</h4>
       <div style={{ display: 'flex', alignItems: 'center' }}>
-        <input id="filterNomeProduto" type="text" value={filtroNomeProduto} onChange={handleFiltroNomeChange} placeholder="Filtrar por nome do produto" />
+        <TextField className="filterNomeProduto"
+          label="Filtrar por nome do produto"
+          variant="outlined"
+          value={filtroNomeProduto}
+          onChange={handleFiltroNomeChange}
+        />
+
         {filtroNomeProduto && (
           <IconButton onClick={handleLimparFiltro} size="small">
             <ClearIcon />

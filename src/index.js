@@ -5,7 +5,6 @@ import { createRoot } from 'react-dom/client'; // Importe createRoot de 'react-d
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import {register} from './serviceWorkerRegistration'; // Importe o arquivo de registro do Service Worker
 
 const root = createRoot(document.getElementById('root')); // Use createRoot
 root.render(
@@ -14,8 +13,6 @@ root.render(
   </React.StrictMode>
 );
 
-// Registre o Service Worker
-register();
 
 // Se você deseja iniciar a medição de desempenho em sua aplicação, passe uma função
 // para registrar os resultados (por exemplo: reportWebVitals(console.log))

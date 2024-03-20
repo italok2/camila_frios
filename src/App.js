@@ -6,8 +6,9 @@ import Pedido from './components/Pedido';
 import CadastroProduto from './components/CadastroProduto';
 import DataGridProduto from './components/DataGridProduto';
 import CadastroClientes from './components/CadastroClientes';
+import serviceWorkerRegistration from './serviceWorkerRegistration';
 function App() {
-
+  serviceWorkerRegistration();
   return (
     <Router>
       <div>

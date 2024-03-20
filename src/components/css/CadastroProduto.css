@@ -17,9 +17,8 @@
         width: 50px !important;
     }
 
-    #filterNomeProduto {
+    .filterNomeProduto {
         width: 80%;
-        margin-left: 10%;
     }
 }
 

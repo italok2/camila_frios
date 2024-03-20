@@ -3,29 +3,41 @@
 const CACHE_NAME = 'app-cache-v1';
 
 self.addEventListener('install', (event) => {
-  console.log('Service Worker instalado.');
+  console.log('Service Worker installed');
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(cache => cache.addAll([
+        '/',
+        '/index.html',
+        // Adicione aqui outros recursos estáticos do seu aplicativo
+      ]))
+  );
 });
 
 self.addEventListener('activate', (event) => {
+  console.log('Service Worker activated');
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cacheName) => {
-          if (cacheName !== CACHE_NAME) {
-            return caches.delete(cacheName);
+    caches.keys()
+      .then(cacheNames => Promise.all(
+        cacheNames.map(cache => {
+          if (cache !== CACHE_NAME) {
+            return caches.delete(cache);
           }
+          return null;
         })
-      );
-    })
+      ))
   );
 });
 
 self.addEventListener('fetch', (event) => {
-  console.log('Requisição recebida:', event.request.url);
-});
-
-self.addEventListener('message', (event) => {
-  if (event.data && event.data.type === 'SKIP_WAITING') {
-    self.skipWaiting();
-  }
+  console.log('Fetch intercepted for:', event.request.url);
+  event.respondWith(
+    caches.match(event.request)
+      .then(cachedResponse => {
+        if (cachedResponse) {
+          return cachedResponse;
+        }
+        return fetch(event.request);
+      })
+  );
 });
