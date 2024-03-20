@@ -6,12 +6,20 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import DataGridProduto from './DataGridProduto'
 import { collection, addDoc } from 'firebase/firestore';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 const CadastrarProduto = () => {
 
     const [nomeProduto, setNomeProduto] = useState('')
     const [descProduto, setDescProduto] = useState('');
     const [preco, setPreco] = useState('');
+    const [unidadeMedida, setUnidadeMedida] = useState('');
+
+    const handleChange = (event) => {
+        setAge(event.target.value);
+      };
 
     const onSubmit = async (e) => {
         e.preventDefault()
@@ -65,14 +73,18 @@ const CadastrarProduto = () => {
                     onChange={(e) => setDescProduto(e.target.value)}
                 />
 
-                <TextField
-                    id="outlined-number"
-                    label="Number"
-                    type="number"
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
-                />
+                <InputLabel id="demo-simple-select-label">Unidade Medida</InputLabel>
+                <Select
+                    labelId="demo-simple-select-label"
+                    id="select-product"
+                    value={unidadeMedida}
+                    label="UnidadeMedida"
+                    onChange={handleChange}
+                >
+                    <MenuItem value={10}>Unidade</MenuItem>
+                    <MenuItem value={1}>Caixa</MenuItem>
+                    <MenuItem value={0}>Kilograma</MenuItem>
+                </Select>
                 <Button id="buttonCadastrarProduto" type="submit" onClick={onSubmit} variant="contained">Cadastrar</Button>
             </Box>
             <DataGridProduto />
