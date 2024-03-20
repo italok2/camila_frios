@@ -1,7 +1,7 @@
-const CACHE_NAME = 'app-cache-v0.1.2';
+const CACHE_NAME = 'app-cache-v0.1.3.1';
 
 self.addEventListener('install', (event) => {
-  console.log('Service Worker installed 2');
+  console.log('Service Worker installed 2 ' + CACHE_NAME);
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => cache.addAll([
@@ -9,19 +9,12 @@ self.addEventListener('install', (event) => {
         '/index.html',
         // Adicione aqui outros recursos estáticos do seu aplicativo
       ]))
-      .then(() => {
-        return caches.keys().then(keys => {
-          return Promise.all(keys
-            .filter(key => key !== CACHE_NAME)
-            .map(key => caches.delete(key))
-          );
-        });
-      })
+      .then(() => self.skipWaiting())
   );
 });
 
 self.addEventListener('activate', (event) => {
-  console.log('Service Worker activated 2');
+  console.log('Service Worker activated 2 ' + CACHE_NAME);
   event.waitUntil(
     caches.keys()
       .then(cacheNames => Promise.all(
@@ -32,11 +25,12 @@ self.addEventListener('activate', (event) => {
           return null;
         })
       ))
+      .then(() => self.clients.claim())
   );
 });
 
 self.addEventListener('fetch', (event) => {
-  console.log('Fetch intercepted for: 2', event.request.url);
+  console.log('Fetch intercepted for: 2 ' + CACHE_NAME, event.request.url);
   event.respondWith(
     caches.match(event.request)
       .then(cachedResponse => {

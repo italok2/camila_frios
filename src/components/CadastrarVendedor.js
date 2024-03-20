@@ -20,7 +20,7 @@ import properties from './Properties';
 
 const CadastrarVendedor = () => {
     const navigate = useNavigate();
-    alert("italo12k2")
+    alert("italoooooooooooo")
     const [showPassword, setShowPassword] = React.useState(false);
     const handleClickShowPassword = () => setShowPassword((show) => !show);
     const handleMouseDownPassword = (event) => {
