@@ -49,13 +49,14 @@ const CadastrarProduto = () => {
         try {
             const produtosCollection = collection(firestore, 'produtos');
             const estoquesCollection = collection(firestore, 'estoques');
-            
+
             const now = new Date();
             const dataNowFormatada = format(now, 'dd/MM/yyyy HH:mm:ss');
 
             const produto = {
                 nomeProduto: nomeProduto,
                 descProduto: descProduto,
+                quantidade: quantidade,
                 preco: parseFloat(preco), // Convertendo para número
                 unidadeMedida: unidadeMedida,
                 dataCadastro: dataNowFormatada,
@@ -63,25 +64,14 @@ const CadastrarProduto = () => {
                 userAgent: auth.currentUser.email
             };
 
-            // Adiciona o documento à coleção 'produtos'
-            const produtoDocRef = await addDoc(produtosCollection, produto);
+            await addDoc(produtosCollection, produto);
 
-
-            const estoque = {
-                produtoId: produtoDocRef.id,
-                quantidade: quantidade,
-                unidadeMedida: unidadeMedida,
-                dataCadastro: dataNowFormatada,
-                dataAtualizacao: null
-            };
-            await addDoc(estoquesCollection, estoque);
-            fetchProdutos();
             setDescProduto('')
             setNomeProduto('')
             setPreco('')
             setUnidadeMedida('')
             alert("produto cadastrado")
-            console.log('Produto cadastrado com sucesso! ID do documento:', produtoDocRef.id);
+            console.log('Produto cadastrado com sucesso! ID do documento:');
 
         } catch (error) {
             console.error('Erro ao cadastrar o produto:', error.message);

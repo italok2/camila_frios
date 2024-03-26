@@ -18,16 +18,13 @@ const columns = [
     width: 190
   },
   {
-    field: 'estoque', // Não use estoque.quantidade aqui
+    field: 'quantidade', // Não use estoque.quantidade aqui
     headerName: 'Quantidade',
     width: 142,
-    type: 'number',
-    renderCell: (params) => (
-      <div>{params.row.estoque ? params.row.estoque.quantidade : ''}</div>
-    )
+    type: 'number'
   },
   {
-    field: 'unidadeMedida', // Adicionei uma nova coluna para exibir a quantidade do estoque
+    field: 'unidadeMedida',
     headerName: 'Medida',
     width: 115
   }, {
@@ -53,32 +50,22 @@ export default function DataGridProduto() {
           const regex = new RegExp(filtroNomeProduto, 'i');
           q = query(produtosCollection, orderBy('nomeProduto'));
 
-          const unsubscribe = onSnapshot(q, async (snapshot) => {
-            const promises = snapshot.docs.map(async (doc) => {
+          const unsubscribe = onSnapshot(q, (snapshot) => {
+            const filteredProdutos = [];
+            snapshot.forEach((doc) => {
               const data = doc.data();
               if (regex.test(data.nomeProduto)) {
-                const quantidadeEstoque = await getEstoque(doc.id);
-                const estoque = { quantidade: quantidadeEstoque };
-                return { id: doc.id, ...data, estoque: estoque };
+                filteredProdutos.push({ id: doc.id, ...data });
               }
-              return null;
             });
-            const produtosWithEstoque = await Promise.all(promises);
-            setProdutos(produtosWithEstoque.filter((produto) => produto !== null));
+            setProdutos(filteredProdutos);
           });
 
           return () => unsubscribe();
         } else {
-          const unsubscribe = onSnapshot(q, async (snapshot) => {
-            const promises = snapshot.docs.map(async (doc) => {
-              const data = doc.data();
-              const quantidadeEstoque = await getEstoque(doc.id);
-              const estoque = { quantidade: quantidadeEstoque };
-              return { id: doc.id, ...data, estoque: estoque };
-            });
-            const produtosWithEstoque = await Promise.all(promises);
-            setProdutos(produtosWithEstoque);
-            console.log(produtosWithEstoque)
+          const unsubscribe = onSnapshot(produtosCollection, (snapshot) => { // Substituir getDocs por onSnapshot
+            const produtosData = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+            setProdutos(produtosData);
           });
 
           return () => unsubscribe();
@@ -97,25 +84,6 @@ export default function DataGridProduto() {
 
   const handleLimparFiltro = () => {
     setFiltroNomeProduto('');
-  };
-
-  const getEstoque = async (id) => {
-    try {
-      const estoqueDbRef = collection(firestore, 'estoques');
-      const filtro = where('produtoId', '==', id);
-      const estoqueSnapshot = await getDocs(query(estoqueDbRef, filtro));
-
-      if (!estoqueSnapshot.empty) {
-        // Se houver registros de estoque, retornar a quantidade do primeiro registro
-        return estoqueSnapshot.docs[0].data().quantidade;
-      } else {
-        // Se não houver registros de estoque, retornar 0
-        return 0;
-      }
-    } catch (error) {
-      console.error('Erro ao buscar estoque:', error);
-      return null;
-    }
   };
 
   return (
