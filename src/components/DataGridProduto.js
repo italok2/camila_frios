@@ -5,7 +5,8 @@ import ClearIcon from '@mui/icons-material/Clear';
 import React, { useState, useEffect } from 'react';
 import TextField from '@mui/material/TextField';
 import firestore from '../firebase';
-import { collection, query, where, orderBy, onSnapshot } from 'firebase/firestore';
+import { collection, query, orderBy, onSnapshot, where, getDocs } from 'firebase/firestore';
+
 import './css/CadastroProduto.css';
 
 const columns = [
@@ -14,16 +15,27 @@ const columns = [
     isCellEditable: false,
     disableColumnSelector: false,
     headerName: 'Produto',
-    width: 180,
-    editable: true,
+    width: 190
   },
   {
+    field: 'estoque', // Não use estoque.quantidade aqui
+    headerName: 'Quantidade',
+    width: 142,
+    type: 'number',
+    renderCell: (params) => (
+      <div>{params.row.estoque ? params.row.estoque.quantidade : ''}</div>
+    )
+  },
+  {
+    field: 'unidadeMedida', // Adicionei uma nova coluna para exibir a quantidade do estoque
+    headerName: 'Medida',
+    width: 115
+  }, {
     field: 'descProduto',
     disableColumnSelector: false,
     isCellEditable: false,
     headerName: 'Descrição',
-    width: 150,
-    editable: true,
+    width: 132
   }
 ];
 
@@ -39,24 +51,34 @@ export default function DataGridProduto() {
 
         if (filtroNomeProduto) {
           const regex = new RegExp(filtroNomeProduto, 'i');
-          q = query(produtosCollection, where('nomeProduto', '>=', filtroNomeProduto), orderBy('nomeProduto'));
+          q = query(produtosCollection, orderBy('nomeProduto'));
 
-          const unsubscribe = onSnapshot(q, (snapshot) => {
-            const filteredProdutos = [];
-            snapshot.forEach((doc) => {
+          const unsubscribe = onSnapshot(q, async (snapshot) => {
+            const promises = snapshot.docs.map(async (doc) => {
               const data = doc.data();
               if (regex.test(data.nomeProduto)) {
-                filteredProdutos.push({ id: doc.id, ...data });
+                const quantidadeEstoque = await getEstoque(doc.id);
+                const estoque = { quantidade: quantidadeEstoque };
+                return { id: doc.id, ...data, estoque: estoque };
               }
+              return null;
             });
-            setProdutos(filteredProdutos);
+            const produtosWithEstoque = await Promise.all(promises);
+            setProdutos(produtosWithEstoque.filter((produto) => produto !== null));
           });
 
           return () => unsubscribe();
         } else {
-          const unsubscribe = onSnapshot(q, (snapshot) => {
-            const produtosData = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-            setProdutos(produtosData);
+          const unsubscribe = onSnapshot(q, async (snapshot) => {
+            const promises = snapshot.docs.map(async (doc) => {
+              const data = doc.data();
+              const quantidadeEstoque = await getEstoque(doc.id);
+              const estoque = { quantidade: quantidadeEstoque };
+              return { id: doc.id, ...data, estoque: estoque };
+            });
+            const produtosWithEstoque = await Promise.all(promises);
+            setProdutos(produtosWithEstoque);
+            console.log(produtosWithEstoque)
           });
 
           return () => unsubscribe();
@@ -75,6 +97,25 @@ export default function DataGridProduto() {
 
   const handleLimparFiltro = () => {
     setFiltroNomeProduto('');
+  };
+
+  const getEstoque = async (id) => {
+    try {
+      const estoqueDbRef = collection(firestore, 'estoques');
+      const filtro = where('produtoId', '==', id);
+      const estoqueSnapshot = await getDocs(query(estoqueDbRef, filtro));
+
+      if (!estoqueSnapshot.empty) {
+        // Se houver registros de estoque, retornar a quantidade do primeiro registro
+        return estoqueSnapshot.docs[0].data().quantidade;
+      } else {
+        // Se não houver registros de estoque, retornar 0
+        return 0;
+      }
+    } catch (error) {
+      console.error('Erro ao buscar estoque:', error);
+      return null;
+    }
   };
 
   return (
