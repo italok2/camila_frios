@@ -5,7 +5,8 @@ import ClearIcon from '@mui/icons-material/Clear';
 import React, { useState, useEffect } from 'react';
 import TextField from '@mui/material/TextField';
 import firestore from '../firebase';
-import { collection, query, orderBy, onSnapshot, where, getDocs } from 'firebase/firestore';
+import { useNavigate } from 'react-router-dom';
+import { collection, query, orderBy, onSnapshot } from 'firebase/firestore';
 
 import './css/CadastroProduto.css';
 
@@ -16,6 +17,12 @@ const columns = [
     disableColumnSelector: false,
     headerName: 'Produto',
     width: 190
+  },
+  {
+    field: 'preco', // Não use estoque.quantidade aqui
+    headerName: 'Preço',
+    width: 100,
+    type: 'number'
   },
   {
     field: 'quantidade', // Não use estoque.quantidade aqui
@@ -32,11 +39,12 @@ const columns = [
     disableColumnSelector: false,
     isCellEditable: false,
     headerName: 'Descrição',
-    width: 132
+    width: 150
   }
 ];
 
 export default function DataGridProduto() {
+  const navigate = useNavigate();
   const [produtos, setProdutos] = useState([]);
   const [filtroNomeProduto, setFiltroNomeProduto] = useState('');
 
@@ -86,6 +94,10 @@ export default function DataGridProduto() {
     setFiltroNomeProduto('');
   };
 
+  const handleProductClick = (id) => {
+    navigate(`/atualizarProduto/${id}`);
+  };
+
   return (
     <Box id="dataGridListProduto" sx={{ height: '100%', width: '100%' }}>
       <h4>Produtos:</h4>
@@ -107,7 +119,14 @@ export default function DataGridProduto() {
         isCellEditable={() => false}
         disableColumnSelector
         rows={produtos}
-        columns={columns}
+        columns={columns.map((column) => ({
+          ...column,
+          renderCell: (params) => (
+            <div style={{ cursor: 'pointer' }} onClick={() => handleProductClick(params.row.id)}>
+              {params.value}
+            </div>
+          ),
+        }))}
         initialState={{
           pagination: {
             paginationModel: {
