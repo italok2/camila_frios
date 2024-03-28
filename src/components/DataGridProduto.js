@@ -5,7 +5,9 @@ import ClearIcon from '@mui/icons-material/Clear';
 import React, { useState, useEffect } from 'react';
 import TextField from '@mui/material/TextField';
 import firestore from '../firebase';
-import { collection, query, where, orderBy, onSnapshot } from 'firebase/firestore';
+import { useNavigate } from 'react-router-dom';
+import { collection, query, orderBy, onSnapshot } from 'firebase/firestore';
+
 import './css/CadastroProduto.css';
 
 const columns = [
@@ -14,20 +16,35 @@ const columns = [
     isCellEditable: false,
     disableColumnSelector: false,
     headerName: 'Produto',
-    width: 180,
-    editable: true,
+    width: 190
   },
   {
+    field: 'preco', // Não use estoque.quantidade aqui
+    headerName: 'Preço',
+    width: 100,
+    type: 'number'
+  },
+  {
+    field: 'quantidade', // Não use estoque.quantidade aqui
+    headerName: 'Quantidade',
+    width: 142,
+    type: 'number'
+  },
+  {
+    field: 'unidadeMedida',
+    headerName: 'Medida',
+    width: 115
+  }, {
     field: 'descProduto',
     disableColumnSelector: false,
     isCellEditable: false,
     headerName: 'Descrição',
-    width: 150,
-    editable: true,
+    width: 150
   }
 ];
 
 export default function DataGridProduto() {
+  const navigate = useNavigate();
   const [produtos, setProdutos] = useState([]);
   const [filtroNomeProduto, setFiltroNomeProduto] = useState('');
 
@@ -39,7 +56,7 @@ export default function DataGridProduto() {
 
         if (filtroNomeProduto) {
           const regex = new RegExp(filtroNomeProduto, 'i');
-          q = query(produtosCollection, where('nomeProduto', '>=', filtroNomeProduto), orderBy('nomeProduto'));
+          q = query(produtosCollection, orderBy('nomeProduto'));
 
           const unsubscribe = onSnapshot(q, (snapshot) => {
             const filteredProdutos = [];
@@ -54,7 +71,7 @@ export default function DataGridProduto() {
 
           return () => unsubscribe();
         } else {
-          const unsubscribe = onSnapshot(q, (snapshot) => {
+          const unsubscribe = onSnapshot(produtosCollection, (snapshot) => { // Substituir getDocs por onSnapshot
             const produtosData = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
             setProdutos(produtosData);
           });
@@ -75,6 +92,10 @@ export default function DataGridProduto() {
 
   const handleLimparFiltro = () => {
     setFiltroNomeProduto('');
+  };
+
+  const handleProductClick = (id) => {
+    navigate(`/atualizarProduto/${id}`);
   };
 
   return (
@@ -98,7 +119,14 @@ export default function DataGridProduto() {
         isCellEditable={() => false}
         disableColumnSelector
         rows={produtos}
-        columns={columns}
+        columns={columns.map((column) => ({
+          ...column,
+          renderCell: (params) => (
+            <div style={{ cursor: 'pointer' }} onClick={() => handleProductClick(params.row.id)}>
+              {params.value}
+            </div>
+          ),
+        }))}
         initialState={{
           pagination: {
             paginationModel: {

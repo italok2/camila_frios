@@ -12,13 +12,16 @@ const DrawerMenu = ({ open, onClose, user }) => {
             <ListItemText primary="Pedidos" />
           </ListItem>
           <ListItem button component={Link} to="/cadastrarproduto">
-            <ListItemText primary="Cadastrar Produtos" />
+            <ListItemText primary="Produtos" />
           </ListItem>
           <ListItem button component={Link} to="/cadastrovendedor">
-            <ListItemText primary="Cadastrar Vendedores" />
+            <ListItemText primary="Vendedores" />
           </ListItem>
           <ListItem button component={Link} to="/cadastrarclientes">
             <ListItemText primary="Clientes" />
+          </ListItem>
+          <ListItem button component={Link} to="/historicoprodutos">
+            <ListItemText primary="Historico" />
           </ListItem>
         </List>
       </Drawer>

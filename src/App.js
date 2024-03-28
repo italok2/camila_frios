@@ -6,7 +6,10 @@ import Pedido from './components/Pedido';
 import CadastroProduto from './components/CadastroProduto';
 import DataGridProduto from './components/DataGridProduto';
 import CadastroClientes from './components/CadastroClientes';
+import AtualizarProduto from './components/AtualizarProduto';
+import HistoricoProduto from './components/HistoricoProduto';
 import serviceWorkerRegistration from './serviceWorkerRegistration';
+
 function App() {
   serviceWorkerRegistration();
   return (
@@ -20,6 +23,9 @@ function App() {
             <Route path="/cadastrarproduto" element={<CadastroProduto />} />
             <Route path="/listarprodutos" element={<DataGridProduto />} />
             <Route path="/cadastrarclientes" element={<CadastroClientes />} />
+            <Route path="/atualizarProduto/:id" element={<AtualizarProduto />} />
+            <Route path="/historicoprodutos" element={<HistoricoProduto />} />
+            
     
           </Routes>
 
