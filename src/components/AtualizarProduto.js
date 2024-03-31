@@ -38,7 +38,6 @@ const AtualizarProduto = () => {
     const [quantidade, setQuantidade] = useState('');
     const [unidadeMedida, setUnidadeMedida] = useState('');
     const [descProduto, setDescProduto] = useState('');
-    const [preco, setPreco] = useState('');
     const [dataCadastro, setDataCadastro] = useState('');
     const [dataAtualizacao, setDataAtualizacao] = useState(null);
     const [userAgent, setUserAgent] = useState('');
@@ -55,7 +54,6 @@ const AtualizarProduto = () => {
                     setQuantidade(data.quantidade);
                     setUnidadeMedida(data.unidadeMedida);
                     setDescProduto(data.descProduto);
-                    setPreco(data.preco);
                     setDataCadastro(data.dataCadastro);
                     setDataAtualizacao(data.dataAtualizacao);
                     setUserAgent(data.userAgent);
@@ -94,7 +92,6 @@ const AtualizarProduto = () => {
                 quantidade,
                 unidadeMedida,
                 descProduto,
-                preco,
                 dataAtualizacao: dataNowFormatada
             });
             alert("Produto atualizado com sucesso!");
@@ -128,12 +125,6 @@ const AtualizarProduto = () => {
                     label="Nome do Produto"
                     value={nomeProduto}
                     onChange={(e) => setNomeProduto(e.target.value)}
-                />
-                <TextField
-                    label="Preço"
-                    type="number"
-                    value={preco}
-                    onChange={(e) => setPreco(e.target.value)}
                 />
                 <TextField
                     label="Quantidade"

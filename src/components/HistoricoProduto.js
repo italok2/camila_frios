@@ -2,14 +2,19 @@ import React, { useEffect, useState } from 'react';
 import firestore from '../firebase';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Pagination from '@mui/material/Pagination';
 import { collection, query, orderBy, where, getDocs } from 'firebase/firestore';
-import { DataGrid } from '@mui/x-data-grid';
 
 export default function HistoricoProduto() {
     const [filtroNomeProduto, setFiltroNomeProduto] = useState('');
     const [idProduto, setIdProduto] = useState('');
     const [produtos, setProdutos] = useState([]);
     const [historicoProdutos, setHistoricoProdutos] = useState([]);
+    const [page, setPage] = useState(1);
+    const pageSize = 5; // Define o número de registros por página como 5
+    const [totalPages, setTotalPages] = useState(0);
 
     useEffect(() => {
         const fetchProdutos = async () => {
@@ -40,8 +45,11 @@ export default function HistoricoProduto() {
                     const q = query(historicoProdutosCollection, where('id', '==', idProduto));
                     const snapshot = await getDocs(q);
                     const historicoProdutosData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                    setHistoricoProdutos(historicoProdutosData);
-                    console.log(historicoProdutosData)
+                    const totalPages = Math.ceil(historicoProdutosData.length / pageSize);
+                    setTotalPages(totalPages);
+                    const startIndex = (page - 1) * pageSize;
+                    const endIndex = startIndex + pageSize;
+                    setHistoricoProdutos(historicoProdutosData.slice(startIndex, endIndex));
                 }
             } catch (error) {
                 console.error('Erro ao buscar histórico de produtos:', error);
@@ -51,7 +59,7 @@ export default function HistoricoProduto() {
         fetchProdutos();
         fetchHistoricoProdutos();
 
-    }, [filtroNomeProduto, idProduto]);
+    }, [filtroNomeProduto, idProduto, page]); // Remova pageSize da lista de dependências, pois não é necessário
 
     const handleProdutoChange = (event, value) => {
         if (value) {
@@ -68,6 +76,10 @@ export default function HistoricoProduto() {
         setFiltroNomeProduto(value);
     };
 
+    const handlePageChange = (event, value) => {
+        setPage(value);
+    };
+
     return (
         <div>
             <Autocomplete
@@ -80,72 +92,27 @@ export default function HistoricoProduto() {
                 onInputChange={handleInputChange}
                 renderInput={(params) => <TextField {...params} label="Produto" />}
             />
-            <div style={{ height: 400, width: '100%', marginTop: 10 }}>
-                <DataGrid
-                    isCellEditable={() => false}
-                    disableColumnSelector
-                    rows={historicoProdutos}
-                    columns={columns}
-                    initialState={{
-                        pagination: {
-                            paginationModel: {
-                                pageSize: 10,
-                            },
-                        },
-                    }}
-                    pageSizeOptions={[5]}
-                    disableRowSelectionOnClick
-                    getRowId={(row) => row.dataAtualizacao} 
+            <div style={{ marginTop: 10 }}>
+                {historicoProdutos.map((produto, index) => (
+                    <Card key={index} style={{ marginBottom: 10 }}>
+                        <CardContent>
+                            <div>Atualizado: <span style={{ color: 'red' }}>{produto.dataAtualizacao}</span></div>
+                            <div>Produto: {produto.nomeProduto}</div>
+                            <div>Quantidade: {produto.quantidade}</div>
+                            <div>Medida: {produto.unidadeMedida}</div>
+                            <div>Usuário: {produto.userAgent}</div>
+
+                            <div>Descrição: {produto.descProduto}</div>
+                        </CardContent>
+                    </Card>
+                ))}
+                <Pagination
+                    count={totalPages}
+                    page={page}
+                    onChange={handlePageChange}
+                    style={{ marginTop: 10, alignSelf: 'center' }}
                 />
             </div>
         </div>
     );
 }
-
-const columns = [
-    {
-        field: 'nomeProduto',
-        isCellEditable: false,
-        disableColumnSelector: false,
-        headerName: 'Produto',
-        width: 190
-    },
-    {
-        field: 'preco', // Não use estoque.quantidade aqui
-        headerName: 'Preço',
-        width: 106,
-        type: 'number'
-    },
-    {
-        field: 'quantidade', // Não use estoque.quantidade aqui
-        headerName: 'Quantidade',
-        width: 142,
-        type: 'number'
-    },
-    {
-        field: 'unidadeMedida',
-        headerName: 'Medida',
-        width: 115
-    },
-    {
-        field: 'userAgent',
-        disableColumnSelector: false,
-        isCellEditable: false,
-        headerName: 'Usuário',
-        width: 150
-    },
-    {
-        field: 'dataAtualizacao',
-        disableColumnSelector: false,
-        isCellEditable: false,
-        headerName: 'Atualizado',
-        width: 150
-    },
-    {
-        field: 'descProduto',
-        disableColumnSelector: false,
-        isCellEditable: false,
-        headerName: 'Descrição',
-        width: 150
-    }
-];

@@ -1,0 +1,19 @@
+@media only screen and (max-width: 700px) {
+    #divSolicitarPedido {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    #divSolicitarPedido > div {
+        flex: 0 0 46%; /* Define a largura de cada TextField para 50% da largura da div pai */
+        padding: 0 5px; /* Adiciona um pequeno espaçamento horizontal entre os TextField */
+        margin-top: 4%;
+    }
+
+    #buttonAdicionarProduto{
+        margin-top: 20px; /* Adiciona um espaçamento superior */
+        display: block; /* Garante que o botão se comporte como um elemento de bloco */
+        margin-left: auto; /* Centraliza o botão horizontalmente */
+        margin-right: auto;
+    }
+}

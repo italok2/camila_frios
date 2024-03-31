@@ -19,12 +19,6 @@ const columns = [
     width: 190
   },
   {
-    field: 'preco', // Não use estoque.quantidade aqui
-    headerName: 'Preço',
-    width: 100,
-    type: 'number'
-  },
-  {
     field: 'quantidade', // Não use estoque.quantidade aqui
     headerName: 'Quantidade',
     width: 142,

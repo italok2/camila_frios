@@ -30,6 +30,9 @@ const DrawerMenu = ({ open, onClose, user }) => {
     return (
       <Drawer anchor="left" open={open} onClose={onClose}>
         <List>
+          <ListItem button component={Link} to="/solicitarpedido">
+            <ListItemText primary="Solicitar Pedido" />
+          </ListItem>
           <ListItem button component={Link} to="/listarprodutos">
             <ListItemText primary="Produtos" />
           </ListItem>

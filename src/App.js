@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import UserStatus from './components/UserStatus';
 import CadastrarVendedor from './components/CadastrarVendedor';
 import Pedido from './components/Pedido';
+import SolicitarPedido from './components/SolicitarPedido';
 import CadastroProduto from './components/CadastroProduto';
 import DataGridProduto from './components/DataGridProduto';
 import CadastroClientes from './components/CadastroClientes';
@@ -20,6 +21,7 @@ function App() {
           <Routes>
             <Route path="/cadastrovendedor" element={<CadastrarVendedor />} />
             <Route path="/pedidos" element={<Pedido />} />
+            <Route path="/solicitarpedido" element={<SolicitarPedido />} />
             <Route path="/cadastrarproduto" element={<CadastroProduto />} />
             <Route path="/listarprodutos" element={<DataGridProduto />} />
             <Route path="/cadastrarclientes" element={<CadastroClientes />} />

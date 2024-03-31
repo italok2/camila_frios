@@ -15,7 +15,6 @@ const CadastrarProduto = () => {
 
     const [nomeProduto, setNomeProduto] = useState('');
     const [descProduto, setDescProduto] = useState('');
-    const [preco, setPreco] = useState('');
     const [unidadeMedida, setUnidadeMedida] = useState('');
     const [quantidade, setQuantidade] = useState('');
 
@@ -26,11 +25,6 @@ const CadastrarProduto = () => {
     function validation() {
         if (nomeProduto === null || nomeProduto === "") {
             alert("Nome produto inválido")
-            return false
-        }
-
-        if (preco === null || preco === "") {
-            alert("Preço inválido")
             return false
         }
 
@@ -57,7 +51,6 @@ const CadastrarProduto = () => {
                 nomeProduto: nomeProduto,
                 descProduto: descProduto,
                 quantidade: quantidade,
-                preco: parseFloat(preco), // Convertendo para número
                 unidadeMedida: unidadeMedida,
                 dataCadastro: dataNowFormatada,
                 dataAtualizacao: null,
@@ -68,7 +61,6 @@ const CadastrarProduto = () => {
 
             setDescProduto('')
             setNomeProduto('')
-            setPreco('')
             setUnidadeMedida('')
             alert("produto cadastrado")
             console.log('Produto cadastrado com sucesso! ID do documento:');
@@ -114,14 +106,6 @@ const CadastrarProduto = () => {
                     value={descProduto}
                     onChange={(e) => setDescProduto(e.target.value)}
                 />
-                <TextField
-                    label="Preço"
-                    variant="outlined"
-                    type="number"
-                    value={preco}
-                    onChange={(e) => setPreco(e.target.value)}
-                />
-
                 <InputLabel id="demo-simple-select-label" >Unidade Medida</InputLabel>
                 <Select
                     labelId="demo-simple-select-label"
